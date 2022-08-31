@@ -73,8 +73,6 @@ implements AuthenticationServiceProviderInterface
         if (Configure::read('debug')) {
             $this->addPlugin('DebugKit');
         }
-
-        // Load more plugins here
     }
 
     /**
@@ -145,25 +143,49 @@ implements AuthenticationServiceProviderInterface
         $this->addPlugin('Migrations');
 
         // Load more plugins here
+        try {
+            // Load more plugins here
+            // $this->addPlugin('IdeHelper');
+        } catch (\Throwable $e) {
+            # code...
+        }
     }
 
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
+        $resolver = [
+            'className' => 'Authentication.Orm',
+            'userModel' => 'Users',
+            'finder' => 'active', // default: 'all'
+        ];
+
+        $resolver = new \Authentication\Identifier\Resolver\OrmResolver(['finder' => 'active']);
+
+
+
         $authenticationService = new AuthenticationService([
             'unauthenticatedRedirect' => Router::url('/users/login'),
             'queryParam' => 'redirect',
         ]);
 
         // Load identifiers, ensure we check email and password fields
+
+
+        /**
+         * @var AuthenticationService $authenticationService
+         * 
+         */
         $authenticationService->loadIdentifier('Authentication.Password', [
             'fields' => [
                 'username' => 'email',
                 'password' => 'password',
-            ]
-        ]);
+            ],
+            // 'resolver' => $resolver
+        ])->setResolver($resolver);
 
         $authenticationService->loadIdentifier('Authentication.Token', [
-            'tokenField' => 'auth_token'
+            'tokenField' => 'auth_token',
+            // 'resolver' => $resolver
         ]);
 
         // Load the authenticators, you want session first
@@ -178,7 +200,7 @@ implements AuthenticationServiceProviderInterface
         ]);
 
         $authenticationService->loadAuthenticator('Authentication.Token', [
-            // 'queryParam' => 'token',
+            'queryParam' => 'token',
             'header' => 'Authorization',
             'tokenPrefix' => 'Token'
         ]);

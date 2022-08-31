@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
@@ -16,8 +17,12 @@
     </aside>
     <div class="column-responsive column-80">
         <div class="users view content">
-            <h3><?= h($user->id) ?></h3>
+            <h3><?= h($user->email) ?></h3>
             <table>
+                <tr>
+                    <th><?= __('Active') ?></th>
+                    <td><?= $user->active ? "Yes" : "No" ?></td>
+                </tr>
                 <tr>
                     <th><?= __('Email') ?></th>
                     <td><?= h($user->email) ?></td>

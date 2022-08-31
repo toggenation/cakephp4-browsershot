@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -29,6 +30,12 @@ use Cake\Validation\Validator;
  */
 class UsersTable extends Table
 {
+
+    public function findActive(Query $query, array $options): Query
+    {
+        return $query->where(['active' => true]);
+    }
+
     /**
      * Initialize method
      *
