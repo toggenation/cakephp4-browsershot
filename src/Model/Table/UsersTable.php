@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -44,6 +45,11 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+    }
+
+    public function findEnabled(Query $query, array $options): Query
+    {
+        return $query->where(['active' => true]);
     }
 
     /**

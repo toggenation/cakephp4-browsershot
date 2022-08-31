@@ -34,6 +34,7 @@ use Cake\Routing\Middleware\RoutingMiddleware;
 use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
+use Authentication\Identifier\Resolver\OrmResolver;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Routing\Router;
 use Psr\Http\Message\ServerRequestInterface;
@@ -145,6 +146,11 @@ implements AuthenticationServiceProviderInterface
         $this->addPlugin('Migrations');
 
         // Load more plugins here
+        try {
+            $this->addPlugin('IdeHelper');
+        } catch (\Throwable $e) {
+            # code...
+        }
     }
 
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
@@ -154,17 +160,27 @@ implements AuthenticationServiceProviderInterface
             'queryParam' => 'redirect',
         ]);
 
+        // $resolver = [
+        //     'className' => 'Authentication.Orm',
+        //     'userModel' => 'Users',
+        //     'finder' => 'active', // default: 'all'
+        // ];
+
+        $resolver = new OrmResolver(['finder' => 'enabled']);
+
         // Load identifiers, ensure we check email and password fields
         $authenticationService->loadIdentifier('Authentication.Password', [
             'fields' => [
                 'username' => 'email',
                 'password' => 'password',
-            ]
-        ]);
+            ],
+            // 'resolver' => $resolver
+        ])->setResolver($resolver);
 
         $authenticationService->loadIdentifier('Authentication.Token', [
-            'tokenField' => 'auth_token'
-        ]);
+            'tokenField' => 'auth_token',
+            'resolver' => $resolver
+        ])->setResolver($resolver);
 
         // Load the authenticators, you want session first
         $authenticationService->loadAuthenticator('Authentication.Session');
@@ -178,7 +194,7 @@ implements AuthenticationServiceProviderInterface
         ]);
 
         $authenticationService->loadAuthenticator('Authentication.Token', [
-            // 'queryParam' => 'token',
+            'queryParam' => 'token',
             'header' => 'Authorization',
             'tokenPrefix' => 'Token'
         ]);

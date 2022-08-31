@@ -87,9 +87,12 @@ class UsersController extends AppController
      */
     public function add()
     {
+        $authUserId = $this->Authentication->getIdentity()?->getIdentifier();
+
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
+            $user->active = true;
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
@@ -109,11 +112,17 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
+        // $authUser = $this->request->getAttribute('identity');
+        $authUserId = $this->Authentication->getIdentity()->getIdentifier();
+
+
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $user = $this->Users->patchEntity($user, $this->request->getData(), [
+                'accessibleFields' => ['active' => $authUserId === 1 || $authUserId === $user->id],
+            ]);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
