@@ -26,7 +26,7 @@
                 echo $this->Form->control('active');
                 echo $this->Form->control('email');
                 echo $this->Form->control('auth_token');
-                echo $this->Form->control('password');
+                echo $this->Form->control('new_password');
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>

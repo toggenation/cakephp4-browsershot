@@ -21,7 +21,7 @@
             <table>
                 <tr>
                     <th><?= __('Active') ?></th>
-                    <td><?= $user->active ? "Yes" : "No" ?></td>
+                    <td><?= $user->active ? "Yes" : "No"; ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Email') ?></th>

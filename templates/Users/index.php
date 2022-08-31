@@ -44,7 +44,7 @@
                         <?php foreach ($users as $user) : ?>
                             <tr>
                                 <td><?= $this->Number->format($user->id) ?></td>
-                                <td><?= $user->active ? "Yes" : "No" ?></td>
+                                <td><?= $user->active ? "Yes" : "No"; ?></td>
                                 <td><?= h($user->email) ?></td>
                                 <td><?= h($user->auth_token) ?></td>
                                 <td><?= h($user->created) ?></td>

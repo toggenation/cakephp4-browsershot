@@ -53,6 +53,11 @@ class UsersTable extends Table
         $this->addBehavior('Timestamp');
     }
 
+    public function findEnabled(Query $query, array $options): Query
+    {
+        return $query->where(['active' => true]);
+    }
+
     /**
      * Default validation rules.
      *

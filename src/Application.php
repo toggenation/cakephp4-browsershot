@@ -34,6 +34,7 @@ use Cake\Routing\Middleware\RoutingMiddleware;
 use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
+use Authentication\Identifier\Resolver\OrmResolver;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Routing\Router;
 use Psr\Http\Message\ServerRequestInterface;
@@ -144,8 +145,7 @@ implements AuthenticationServiceProviderInterface
 
         // Load more plugins here
         try {
-            // Load more plugins here
-            // $this->addPlugin('IdeHelper');
+            $this->addPlugin('IdeHelper');
         } catch (\Throwable $e) {
             # code...
         }
@@ -168,6 +168,14 @@ implements AuthenticationServiceProviderInterface
             'queryParam' => 'redirect',
         ]);
 
+        // $resolver = [
+        //     'className' => 'Authentication.Orm',
+        //     'userModel' => 'Users',
+        //     'finder' => 'active', // default: 'all'
+        // ];
+
+        $resolver = new OrmResolver(['finder' => 'enabled']);
+
         // Load identifiers, ensure we check email and password fields
 
 
@@ -185,8 +193,8 @@ implements AuthenticationServiceProviderInterface
 
         $authenticationService->loadIdentifier('Authentication.Token', [
             'tokenField' => 'auth_token',
-            // 'resolver' => $resolver
-        ]);
+            'resolver' => $resolver
+        ])->setResolver($resolver);
 
         // Load the authenticators, you want session first
         $authenticationService->loadAuthenticator('Authentication.Session');
