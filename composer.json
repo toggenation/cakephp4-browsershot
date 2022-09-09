@@ -22,8 +22,15 @@
         "fakerphp/faker": "^1.20",
         "josegonzalez/dotenv": "^3.2",
         "mbezhanov/faker-provider-collection": "^2.0",
-        "phpunit/phpunit": "~8.5.0 || ^9.3"
+        "phpunit/phpunit": "~8.5.0 || ^9.3",
+        "toggenation/fake-barcode": "dev-main"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/toggenation/fake-barcode"
+        }
+    ],
     "suggest": {
         "markstory/asset_compress": "An asset compression plugin which provides file concatenation and a flexible filter system for preprocessing and minification.",
         "dereuromark/cakephp-ide-helper": "After baking your code, this keeps your annotations in sync with the code evolving from there on for maximum IDE and PHPStan/Psalm compatibility.",

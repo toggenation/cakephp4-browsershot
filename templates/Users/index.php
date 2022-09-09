@@ -21,6 +21,11 @@
             <?= $this->Html->link(__('Logout'), [
                 'action' => 'logout'
             ], ['class' => 'side-nav-item']) ?>
+
+            <?= $this->Html->link(__('Labels'), [
+                'controller' => 'printing',
+                'action' => 'label'
+            ], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>
     <div class="column-responsive column-80">
